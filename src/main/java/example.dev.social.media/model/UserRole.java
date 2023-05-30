@@ -1,4 +1,4 @@
-package com.example.dev.social.media.model;
+package example.dev.social.media.model;
 
 
 import lombok.AllArgsConstructor;
@@ -19,6 +19,7 @@ public class UserRole {
     private String name;
 
 
-
-
+    public UserRole(String roleName) {
+        this.name = roleName;
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.dev.social.media.model;
+package example.dev.social.media.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

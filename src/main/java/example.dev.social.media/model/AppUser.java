@@ -1,5 +1,6 @@
-package com.example.dev.social.media.model;
+package example.dev.social.media.model;
 
+import example.dev.social.media.model.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

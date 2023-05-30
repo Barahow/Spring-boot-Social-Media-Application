@@ -1,7 +1,7 @@
-package com.example.dev.social.media.service;
+package example.dev.social.media.service;
 
-import com.example.dev.social.media.model.AppUser;
-import com.example.dev.social.media.model.UserRole;
+import example.dev.social.media.model.AppUser;
+import example.dev.social.media.model.UserRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
