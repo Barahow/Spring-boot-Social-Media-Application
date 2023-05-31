@@ -1,15 +1,13 @@
-package example.dev.social.media.service;
+package dev.social.media.security.service;
 
-import dev.social.media.PasswordEncoderConfig;
-import example.dev.social.media.model.AppUser;
-import example.dev.social.media.model.UserRole;
-import example.dev.social.media.repository.RoleRepository;
-import example.dev.social.media.repository.UserRepository;
-import example.dev.social.media.service.UserService;
+import dev.social.media.security.config.PasswordEncoderConfig;
+import dev.social.media.security.model.AppUser;
+import dev.social.media.security.model.UserRole;
+import dev.social.media.security.repository.RoleRepository;
+import dev.social.media.security.repository.UserRepository;
 import jakarta.validation.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.http11.filters.IdentityInputFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -21,7 +19,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import scala.reflect.internal.Trees;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -32,7 +29,7 @@ import java.util.*;
 @Transactional
 @AllArgsConstructor
 
-public class UserServiceImp implements UserService, UserDetailsService {
+public class UserServiceImp implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -41,7 +38,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     private final MongoTemplate mongoTemplate;
 
 
-    @Override
+/*    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         if (email == null || email.isEmpty()) {
             throw new IllegalArgumentException("email cannot be null or empty");
@@ -65,7 +62,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
         return new org.springframework.security.core.userdetails.User(appUser.getEmail(), appUser.getPassword(), authorities);
 
 
-    }
+    }*/
 
 
     @Override
@@ -89,7 +86,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
             user.setRoleList(Collections.singletonList(userRole.get()));
 
-            newUser = new AppUser(null, user.getUserName(), user.getEmail(), user.getPassword(), dateTime, user.getUpdatedAt(), user.getAddress(), user.getFirstName(), user.getLastName(), user.getDateOfBirth(), user.getProfilePicture(), user.getRoleList());
+            newUser = new AppUser(null, user.getUsername(), user.getEmail(), user.getPassword(), dateTime, user.getUpdatedAt(), user.getAddress(), user.getFirstName(), user.getLastName(), user.getDateOfBirth(), user.getProfilePicture(), user.getRoleList());
 
             log.info("Created a new User {}", newUser);
 

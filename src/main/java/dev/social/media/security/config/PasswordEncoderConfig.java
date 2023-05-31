@@ -1,4 +1,4 @@
-package dev.social.media;
+package dev.social.media.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

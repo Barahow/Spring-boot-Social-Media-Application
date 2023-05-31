@@ -1,4 +1,5 @@
-package example.dev.social.media.model;
+package dev.social.media.security.model;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,27 +8,18 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
-
-@Document(collection = "follow")
+@Document(collection = "user_roles")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Like {
+public class UserRole {
+
     @Id
     private ObjectId id;
-
-    private AppUser user;
-
-    private Post post;
-
-    private LocalDateTime createdAt;
+    private String name;
 
 
-
-
-
+    public UserRole(String roleName) {
+        this.name = roleName;
+    }
 }
-
-
-

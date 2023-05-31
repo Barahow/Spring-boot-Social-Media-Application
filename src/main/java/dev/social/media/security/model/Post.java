@@ -1,4 +1,4 @@
-package example.dev.social.media.model;
+package dev.social.media.security.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,25 +10,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "comment")
+@Document(collection = "post")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Comment {
-
+public class Post {
     @Id
     private ObjectId id;
     private String content;
-
     private LocalDateTime createdAt;
-    private LocalDateTime updateAt;
-
+    private LocalDateTime updatedAt;
     @DBRef
     private AppUser user;
-    @DBRef
-    private Post post;
-
-
 
 
 

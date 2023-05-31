@@ -1,11 +1,10 @@
-package example.dev.social.media.security;
+package dev.social.media.security.security;
 
-import dev.social.media.PasswordEncoderConfig;
+import dev.social.media.security.config.PasswordEncoderConfig;
 import lombok.AllArgsConstructor;
-import org.sparkproject.jetty.security.UserAuthentication;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -32,14 +31,26 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
 
+    @Value("${spring.security.oauth2.resourceserver.opaque.introspection-uri}")
+    String introspectionUri;
+
+    @Value("${spring.security.oauth2.resourceserver.opaque.introspection-client-id}")
+    String clientId;
+    @Value("${spring.security.oauth2.resourceserver.opaque.introspection-client-secret}")
+    String clientSecret;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests().requestMatchers("/api/v1/login/**").permitAll();
         http.authorizeHttpRequests().requestMatchers(GET,"/api/v1/user/**").hasAuthority("USER");
-        http.authorizeHttpRequests().anyRequest().authenticated();
 
+        http.authorizeHttpRequests().anyRequest().authenticated()
+                .and().oauth2ResourceServer(oauth-> oauth.opaqueToken(token-> token.introspectionUri(this.introspectionUri).introspectionClientCredentials(this.clientId,this.clientSecret)));
+
+        http.oauth2Login();
 
         return http.build();
 

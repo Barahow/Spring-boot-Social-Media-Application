@@ -1,7 +1,7 @@
-package example.dev.social.media.repository;
+package dev.social.media.security.repository;
 
 
-import example.dev.social.media.model.AppUser;
+import dev.social.media.security.model.AppUser;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

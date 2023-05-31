@@ -1,6 +1,5 @@
-package example.dev.social.media.model;
+package dev.social.media.security.model;
 
-import example.dev.social.media.model.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -10,17 +9,21 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Document(collection = "app_users")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppUser {
+public class AppUser implements UserDetails {
 
      @Id
      private ObjectId id;
@@ -46,6 +49,40 @@ public class AppUser {
      @DBRef
      private List<UserRole> roleList;
 
+     @Override
+     public Collection<? extends GrantedAuthority> getAuthorities() {
+          Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+          roleList.forEach(userRole -> {
+
+               authorities.add(new SimpleGrantedAuthority(userRole.getName()));
+          });
+          return authorities;
+     }
+
+     @Override
+     public String getUsername() {
+          return email;
+     }
+
+     @Override
+     public boolean isAccountNonExpired() {
+          return false;
+     }
+
+     @Override
+     public boolean isAccountNonLocked() {
+          return false;
+     }
+
+     @Override
+     public boolean isCredentialsNonExpired() {
+          return false;
+     }
+
+     @Override
+     public boolean isEnabled() {
+          return false;
+     }
 
 
 /*
