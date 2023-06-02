@@ -1,8 +1,20 @@
 package dev.social.media.security;
 
+import dev.social.media.security.config.PasswordEncoderConfig;
+import dev.social.media.security.model.AppUser;
+import dev.social.media.security.model.UserRole;
+import dev.social.media.security.service.UserService;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 
 @SpringBootApplication
@@ -12,29 +24,24 @@ public class MoviesSpringApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MoviesSpringApplication.class, args);
 	}
+	private PasswordEncoderConfig passwordEncoderConfig;
 
-
-
-	/*@Bean
-	PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-*/
-
-
-/*
 	@Bean
-		CommandLineRunner run(UserService userService) {
+	CommandLineRunner run(UserService userService) {
 			return  args -> {
 				userService.saveRole(new UserRole(null,"USER"));
 				userService.saveRole(new UserRole(null,"MANAGER"));
 				userService.saveRole(new UserRole(null,"ADMIN"));
 				userService.saveRole(new UserRole(null,"SUPER_ADMIN"));
+				LocalDateTime dateTime = LocalDateTime.now();
 
-				userService.saveUser(new AppUser(null,"John Travolta","john@gmail.com","password", new ArrayList<>()));
-				userService.saveUser(new AppUser(null,"Will Smith","will@gmail.com","password", new ArrayList<>()));
-				userService.saveUser(new AppUser(null,"Jim Carry","jim@gmail.com","password", new ArrayList<>()));
-				userService.saveUser(new AppUser(null,"Arnold Schwarzenegger","arnold@gmail.com","password", new ArrayList<>()));
+				userService.createUser(new AppUser(null,"Travolta","john@gmail.com","password",dateTime,null,"street 23","John","Travolta", LocalDate.of(1969,12,4),null,new ArrayList<>()));
+				userService.createUser(new AppUser(null,"Smith","will@gmail.com","password",dateTime,null,"pd 23","Will","Smith", LocalDate.of(183,8,21),null,new ArrayList<>()));
+				userService.createUser(new AppUser(null,"Carry","jim@gmail.com","password",dateTime,null,"street 23","Jim","Carry", LocalDate.of(1978,5,2),null,new ArrayList<>()));
+				userService.createUser(new AppUser(null,"Schwarzenegger","arnold@gmail.com","password",dateTime,null,"cal 32","Arnold","Schwarzenegger", LocalDate.of(1966,3,20),null,new ArrayList<>()));
+
+
+
 
 				userService.addRoleToUser("john@gmail.com","USER");
 				userService.addRoleToUser("john@gmail.com","MANAGER");
@@ -47,6 +54,6 @@ public class MoviesSpringApplication {
 
 			};
 		}
-	}*/
-}
+	}
+
 

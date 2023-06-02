@@ -29,7 +29,7 @@ import java.util.*;
 @Transactional
 @AllArgsConstructor
 
-public class UserServiceImp implements UserService {
+public class UserServiceImp implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -38,7 +38,7 @@ public class UserServiceImp implements UserService {
     private final MongoTemplate mongoTemplate;
 
 
-/*    @Override
+    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         if (email == null || email.isEmpty()) {
             throw new IllegalArgumentException("email cannot be null or empty");
@@ -62,7 +62,7 @@ public class UserServiceImp implements UserService {
         return new org.springframework.security.core.userdetails.User(appUser.getEmail(), appUser.getPassword(), authorities);
 
 
-    }*/
+    }
 
 
     @Override
@@ -86,7 +86,7 @@ public class UserServiceImp implements UserService {
 
             user.setRoleList(Collections.singletonList(userRole.get()));
 
-            newUser = new AppUser(null, user.getUsername(), user.getEmail(), user.getPassword(), dateTime, user.getUpdatedAt(), user.getAddress(), user.getFirstName(), user.getLastName(), user.getDateOfBirth(), user.getProfilePicture(), user.getRoleList());
+            newUser = new AppUser(null, user.getUsername(), user.getEmail(), user.getPassword(), user.getCreateAt(), user.getUpdatedAt(), user.getAddress(), user.getFirstName(), user.getLastName(), user.getDateOfBirth(), user.getProfilePicture(), user.getRoleList());
 
             log.info("Created a new User {}", newUser);
 

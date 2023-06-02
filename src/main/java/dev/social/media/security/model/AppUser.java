@@ -23,7 +23,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppUser implements UserDetails {
+public class AppUser implements UserDetails  {
 
      @Id
      private ObjectId id;
