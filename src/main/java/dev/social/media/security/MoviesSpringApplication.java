@@ -25,7 +25,7 @@ public class MoviesSpringApplication {
 		SpringApplication.run(MoviesSpringApplication.class, args);
 	}
 	private PasswordEncoderConfig passwordEncoderConfig;
-
+/*
 	@Bean
 	CommandLineRunner run(UserService userService) {
 			return  args -> {
@@ -53,7 +53,7 @@ public class MoviesSpringApplication {
 
 
 			};
-		}
+		}*/
 	}
 
 

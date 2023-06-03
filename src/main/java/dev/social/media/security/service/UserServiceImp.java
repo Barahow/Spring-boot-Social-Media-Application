@@ -74,7 +74,6 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
         AppUser newUser = userRepository.findByEmailIgnoreCase(user.getEmail());
 
-        LocalDateTime dateTime = LocalDateTime.now();
         if (newUser != null) {
             throw new IllegalArgumentException("The email already exist");
         } else {
@@ -86,7 +85,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
             user.setRoleList(Collections.singletonList(userRole.get()));
 
-            newUser = new AppUser(null, user.getUsername(), user.getEmail(), user.getPassword(), user.getCreateAt(), user.getUpdatedAt(), user.getAddress(), user.getFirstName(), user.getLastName(), user.getDateOfBirth(), user.getProfilePicture(), user.getRoleList());
+            newUser = new AppUser(null, user.getUserName(), user.getEmail(), user.getPassword(), user.getCreateAt(), user.getUpdatedAt(), user.getAddress(), user.getFirstName(), user.getLastName(), user.getDateOfBirth(), user.getProfilePicture(), user.getRoleList());
 
             log.info("Created a new User {}", newUser);
 

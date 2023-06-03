@@ -1,9 +1,10 @@
-package dev.social.media.security.security;
+package dev.social.media.security.filter;
 
 import com.esotericsoftware.kryo.util.ObjectMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.social.media.security.model.AppUser;
 import dev.social.media.security.service.JwtTokenProvider;
+import dev.social.media.security.service.UserService;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,16 +27,20 @@ import java.nio.file.attribute.UserPrincipal;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   private final AuthenticationManager authenticationManager;
   private final JwtTokenProvider jwtTokenProvider;
-
+private  final UserService userService;
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        try {
-            AppUser appUser = new ObjectMapper().readValue(request.getInputStream(),AppUser.class);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(appUser.getEmail(),appUser.getPassword());
-            return authenticationManager.authenticate(authentication);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        log.info("email: is {}", email);
+        log.info("password is {} ", password);
+        AppUser user = userService.getUser(email);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getEmail(), password);
+
+
+        return authenticationManager.authenticate(authenticationToken);
+
+
     }
 
     @Override

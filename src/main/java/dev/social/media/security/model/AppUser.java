@@ -2,6 +2,7 @@ package dev.social.media.security.model;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppUser implements UserDetails  {
+public class AppUser {
 
      @Id
      private ObjectId id;
@@ -41,48 +42,13 @@ public class AppUser implements UserDetails  {
      private String firstName;
      @NotBlank(message = "Last name is mandatory")
      private String lastName;
-     @NotBlank(message = "Date of birth is mandatory")
+     @NotNull(message = "Date of birth is mandatory")
      private LocalDate dateOfBirth;
 
      private String profilePicture;
 
      @DBRef
      private List<UserRole> roleList;
-
-     @Override
-     public Collection<? extends GrantedAuthority> getAuthorities() {
-          Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-          roleList.forEach(userRole -> {
-
-               authorities.add(new SimpleGrantedAuthority(userRole.getName()));
-          });
-          return authorities;
-     }
-
-     @Override
-     public String getUsername() {
-          return email;
-     }
-
-     @Override
-     public boolean isAccountNonExpired() {
-          return false;
-     }
-
-     @Override
-     public boolean isAccountNonLocked() {
-          return false;
-     }
-
-     @Override
-     public boolean isCredentialsNonExpired() {
-          return false;
-     }
-
-     @Override
-     public boolean isEnabled() {
-          return false;
-     }
 
 
 /*
