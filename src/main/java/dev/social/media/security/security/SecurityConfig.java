@@ -6,6 +6,7 @@ import dev.social.media.security.filter.JwtAuthorizationFilter;
 import dev.social.media.security.service.JwtTokenProvider;
 import dev.social.media.security.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +27,7 @@ import static org.springframework.http.HttpMethod.POST;
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
+@Slf4j
 public class SecurityConfig {
 
 
@@ -41,17 +43,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+        log.info("am i getting stopped here");
         AbstractAuthenticationProcessingFilter filter = new JwtAuthenticationFilter(authenticationManager(),jwtTokenProvider,userService);
-
-        filter.setFilterProcessesUrl("api/v1/login");
+        filter.setFilterProcessesUrl("/api/v1/login");
 
 
         http.csrf().disable();
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+          http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+           log.info("am i getting stopped here 1");
         http.authorizeHttpRequests().requestMatchers("/api/v1/login/**", "/api/token/refresh/**").permitAll();
         http.authorizeHttpRequests().requestMatchers(GET,"/api/v1/user/**").hasAuthority("USER");
         http.authorizeHttpRequests().requestMatchers(POST, "api/v1/user/**").hasAuthority("ADMIN");
         http.authorizeHttpRequests().anyRequest().authenticated();
+        log.info("am i getting stopped here 2");
         http.addFilter(filter);
 
         http.addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider,userDetailsService), UsernamePasswordAuthenticationFilter.class);

@@ -9,12 +9,14 @@ import jakarta.ws.rs.core.SecurityContext;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.security.authorize.AuthorizationException;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -22,11 +24,15 @@ import java.net.http.HttpHeaders;
 
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 @Slf4j
 @AllArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
+
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -42,8 +48,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 try {
 
 
-                    String email = jwtTokenProvider.getEmailFromToken(jwtTokenProvider.getEmailFromToken(token));
+                    String email = jwtTokenProvider.getEmailFromToken(token);
                     UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
+
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);

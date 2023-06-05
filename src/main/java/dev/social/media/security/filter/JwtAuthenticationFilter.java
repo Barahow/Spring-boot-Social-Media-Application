@@ -34,8 +34,8 @@ private  final UserService userService;
         String password = request.getParameter("password");
         log.info("email: is {}", email);
         log.info("password is {} ", password);
-        AppUser user = userService.getUser(email);
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getEmail(), password);
+       // AppUser user = userService.getUser(email);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
 
 
         return authenticationManager.authenticate(authenticationToken);
@@ -45,10 +45,10 @@ private  final UserService userService;
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        UserPrincipal userPrincipal = (UserPrincipal) authResult.getPrincipal();
+     //   UserPrincipal userPrincipal = (UserPrincipal) authResult.getPrincipal();
         String accessToken = jwtTokenProvider.generateAccessToken(authResult,request);
 
 
-        response.addHeader("Authorization", "Bearer" + accessToken);
+        response.addHeader("Authorization", "Bearer " + accessToken);
     }
 }

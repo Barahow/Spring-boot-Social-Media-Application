@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import dev.social.media.security.config.EnvironmentKey;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -33,19 +34,19 @@ public class JwtTokenProvider {
 
     public String generateAccessToken(Authentication authentication, HttpServletRequest request) {
      User user = (User) authentication.getPrincipal();
+        String secret = System.getenv("MY_APP_SECRET_KEY");
+        log.info("Secret key value is: " + secret);
+        List<String> roles =user.getAuthorities().stream().map(GrantedAuthority:: getAuthority).collect(Collectors.toList());
 
-        List<String> roles = user.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority).toList();
+      //  Claims claims = Jwts.claims().setSubject(user.getUsername());
+        //claims.put("roles", roles);
 
-        Claims claims = Jwts.claims().setSubject(user.getUsername());
-        claims.put("roles", roles);
+       // SecretKey secretKey = Keys.hmacShaKeyFor(environmentKey.getSecretKey().getBytes());
 
-        SecretKey secretKey = Keys.hmacShaKeyFor(environmentKey.getSecretKey().getBytes());
-
-        Algorithm algorithm = Algorithm.HMAC256(secretKey.getAlgorithm());
+        Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
 
         String access_token = JWT.create().withSubject(user.getUsername())
-                .withClaim("roles",user.getAuthorities().stream().map(GrantedAuthority:: getAuthority).collect(Collectors.toList()))
+                .withClaim("roles",roles)
                 .withIssuer(request.getRequestURI().toString())
                 .withExpiresAt(new Date(System.currentTimeMillis()+60*60*1000))
                 .sign(algorithm);
@@ -57,7 +58,9 @@ public class JwtTokenProvider {
     }
     public boolean validateToken(String token) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(environmentKey.getSecretKey().getBytes());
+
+            String secretKey = System.getenv("MY_APP_SECRET_KEY");
+            Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
             JWTVerifier verifier = JWT.require(algorithm).build();
             verifier.verify(token);
             return true;
@@ -67,13 +70,15 @@ public class JwtTokenProvider {
         }
     }
     public String getEmailFromToken(String token) {
-        Key key = Keys.hmacShaKeyFor(environmentKey.getSecretKey().getBytes());
+        String secretKey = System.getenv("MY_APP_SECRET_KEY");
+        //Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
+        JWTVerifier verify = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verify.verify(token);
 
-        Jws<Claims> claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build().parseClaimsJws(token);
 
-        return claims.getBody().get("email", String.class);
+
+        return decodedJWT.getSubject();
 
 
     }
