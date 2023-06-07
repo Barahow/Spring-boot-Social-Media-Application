@@ -21,8 +21,7 @@ import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
@@ -43,19 +42,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        log.info("am i getting stopped here");
+        
         AbstractAuthenticationProcessingFilter filter = new JwtAuthenticationFilter(authenticationManager(),jwtTokenProvider,userService);
         filter.setFilterProcessesUrl("/api/v1/login");
 
 
         http.csrf().disable();
           http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-           log.info("am i getting stopped here 1");
         http.authorizeHttpRequests().requestMatchers("/api/v1/login/**", "/api/token/refresh/**").permitAll();
         http.authorizeHttpRequests().requestMatchers(GET,"/api/v1/user/**").hasAuthority("USER");
         http.authorizeHttpRequests().requestMatchers(POST, "api/v1/user/**").hasAuthority("ADMIN");
+        http.authorizeHttpRequests().requestMatchers(GET, "/api/v1/post/**",  "/api/v1/user/**").hasAnyAuthority("ADMIN");
+        http.authorizeHttpRequests().requestMatchers(DELETE, "/api/v1/user/**","/api/v1/post/**").hasAuthority("USER");
+        http.authorizeHttpRequests().requestMatchers(POST, "api/v1/post/**", "api/v1/user/**").hasAuthority("ADMIN");
+        http.authorizeHttpRequests().requestMatchers(PUT, "/api/v1/post/**","/api/v1/user/**").hasAuthority("USER");
+        http.authorizeHttpRequests().requestMatchers(PUT,  "/api/v1/post/**", "api/v1/user/**").hasAuthority("ADMIN");
+        http.authorizeHttpRequests().requestMatchers(DELETE, "/api/v1/post/**", "/api/v1/user/**").hasAuthority("SUPER_ADMIN");
+
         http.authorizeHttpRequests().anyRequest().authenticated();
-        log.info("am i getting stopped here 2");
+
         http.addFilter(filter);
 
         http.addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider,userDetailsService), UsernamePasswordAuthenticationFilter.class);

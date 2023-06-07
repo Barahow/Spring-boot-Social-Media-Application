@@ -11,6 +11,7 @@ public interface UserService {
     AppUser createUser(AppUser user);
 
     AppUser getUser(String email);
+    AppUser updateUser(AppUser user );
 
     UserRole saveRole(UserRole role);
 
@@ -19,4 +20,8 @@ public interface UserService {
     void deleteUser(AppUser user);
 
     void addRoleToUser(String email, String roleName);
+
+
+
+
 }

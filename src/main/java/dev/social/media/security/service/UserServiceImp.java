@@ -1,5 +1,9 @@
 package dev.social.media.security.service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import dev.social.media.security.config.PasswordEncoderConfig;
 import dev.social.media.security.model.AppUser;
 import dev.social.media.security.model.UserRole;
@@ -133,6 +137,16 @@ public class UserServiceImp implements UserService, UserDetailsService {
     }
 
     @Override
+    public AppUser updateUser(AppUser user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        log.info("updating new user to the database {}", user.getEmail());
+
+        return userRepository.save(user);
+    }
+
+    @Override
     public UserRole saveRole(UserRole role) {
         return roleRepository.save(role);
     }
@@ -175,4 +189,6 @@ public class UserServiceImp implements UserService, UserDetailsService {
         user.getRoleList().add(userRole);
 
     }
+
+
 }
