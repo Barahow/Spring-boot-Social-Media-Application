@@ -42,7 +42,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        
+
         AbstractAuthenticationProcessingFilter filter = new JwtAuthenticationFilter(authenticationManager(),jwtTokenProvider,userService);
         filter.setFilterProcessesUrl("/api/v1/login");
 

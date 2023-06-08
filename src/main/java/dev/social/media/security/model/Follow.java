@@ -21,7 +21,6 @@ public class Follow {
     private ObjectId id;
     @DBRef
     private AppUser follower;
-    private String followingUserId;
 
     private LocalDateTime createdAt;
 

@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "follow")
+@Document(collection = "like")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,6 +20,8 @@ public class Like {
     private AppUser user;
 
     private Post post;
+
+    private Comment comment;
 
     private LocalDateTime createdAt;
 
