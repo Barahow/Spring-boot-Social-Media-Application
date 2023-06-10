@@ -1,10 +1,12 @@
 package dev.social.media.security.controller;
 
+import dev.social.media.security.dto.PostContent;
 import dev.social.media.security.model.AppUser;
 import dev.social.media.security.model.Post;
 import dev.social.media.security.service.JwtTokenProvider;
 import dev.social.media.security.service.PostService;
 import dev.social.media.security.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.shaded.org.apache.http.client.AuthCache;
@@ -38,7 +40,7 @@ public class PostController {
 
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody Map<String,Object> request, @RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<Post> createPost(@RequestBody @Valid PostContent postContent, @RequestHeader("Authorization") String authorizationHeader) {
         String loggedInUserEmail = jwtTokenProvider.getEmailFromToken(authorizationHeader);
 
         AppUser appUser = userService.getUser(loggedInUserEmail);
@@ -52,7 +54,7 @@ public class PostController {
         }
 
 
-        String content = (String) request.get("content");
+        String content = postContent.getContent();
 
         Post post = postService.createPost(appUser.getEmail(),content);
 
@@ -95,7 +97,7 @@ public class PostController {
 
     @PutMapping("/post/{id}")
 
-    public ResponseEntity<Post> editPost(@PathVariable ObjectId postId, @RequestHeader("Authorization") @RequestBody Post updatePost, String authorizationHeader) {
+    public ResponseEntity<Post> editPost(@PathVariable ObjectId postId, @RequestHeader("Authorization") @RequestBody PostContent updatePost, String authorizationHeader) {
 
         String loggedInUserEmail = jwtTokenProvider.getEmailFromToken(authorizationHeader);
 

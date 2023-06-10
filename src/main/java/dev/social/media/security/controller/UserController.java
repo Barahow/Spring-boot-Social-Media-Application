@@ -1,5 +1,6 @@
 package dev.social.media.security.controller;
 
+import dev.social.media.security.Errors.GlobalExceptionHandler;
 import dev.social.media.security.model.AppUser;
 import dev.social.media.security.service.JwtTokenProvider;
 import dev.social.media.security.service.UserService;
@@ -31,6 +32,8 @@ public class UserController {
     private final UserService userService;
 
     private final JwtTokenProvider jwtTokenProvider;
+
+
 
     @GetMapping("/user")
     public ResponseEntity<Page<AppUser>> getAllUsers(@RequestParam(defaultValue = "0") @Min(0) int page,
@@ -71,7 +74,7 @@ public class UserController {
         AppUser appUser = userService.getUser(loggedInUserEmail);
 
         if (appUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED_401).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND_404).build();
         }
 
         if (!appUser.getEmail().equals(loggedInUserEmail)) {

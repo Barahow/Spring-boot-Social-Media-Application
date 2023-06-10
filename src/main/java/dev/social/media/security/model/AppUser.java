@@ -45,6 +45,8 @@ public class AppUser {
      @NotNull(message = "Date of birth is mandatory")
      private LocalDate dateOfBirth;
 
+     private boolean isPrivate;
+
      private String profilePicture;
 
      @DBRef

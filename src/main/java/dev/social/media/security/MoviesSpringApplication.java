@@ -32,13 +32,13 @@ public class MoviesSpringApplication {
 				userService.saveRole(new UserRole(null,"USER"));
 				userService.saveRole(new UserRole(null,"MANAGER"));
 				userService.saveRole(new UserRole(null,"ADMIN"));
-				userService.saveRole(new UserRole(null,"SUPER_ADMIN"));
+				//userService.saveRole(new UserRole(null,"SUPER_ADMIN"));
 				LocalDateTime dateTime = LocalDateTime.now();
 
-				userService.createUser(new AppUser(null,"Travolta","john@gmail.com","password",dateTime,null,"street 23","John","Travolta", LocalDate.of(1969,12,4),null,new ArrayList<>()));
-				userService.createUser(new AppUser(null,"Smith","will@gmail.com","password",dateTime,null,"pd 23","Will","Smith", LocalDate.of(183,8,21),null,new ArrayList<>()));
-				userService.createUser(new AppUser(null,"Carry","jim@gmail.com","password",dateTime,null,"street 23","Jim","Carry", LocalDate.of(1978,5,2),null,new ArrayList<>()));
-				userService.createUser(new AppUser(null,"Schwarzenegger","arnold@gmail.com","password",dateTime,null,"cal 32","Arnold","Schwarzenegger", LocalDate.of(1966,3,20),null,new ArrayList<>()));
+				userService.createUser(new AppUser(null,"Travolta","john@gmail.com","password",dateTime,null,"street 23","John","Travolta", LocalDate.of(1969,12,4),false,null,new ArrayList<>()));
+				userService.createUser(new AppUser(null,"Smith","will@gmail.com","password",dateTime,null,"pd 23","Will","Smith", LocalDate.of(183,8,21),false,null,new ArrayList<>()));
+				userService.createUser(new AppUser(null,"Carry","jim@gmail.com","password",dateTime,null,"street 23","Jim","Carry", LocalDate.of(1978,5,2),false,null,new ArrayList<>()));
+				userService.createUser(new AppUser(null,"Schwarzenegger","arnold@gmail.com","password",dateTime,null,"cal 32","Arnold","Schwarzenegger", LocalDate.of(1966,3,20),false,null,new ArrayList<>()));
 
 
 

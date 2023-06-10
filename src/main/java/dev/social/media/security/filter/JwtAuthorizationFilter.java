@@ -64,7 +64,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                     String errorMessage = "{\"error_message\":\"" + ex.getMessage() + "\"}";
                     response.getOutputStream().write(errorMessage.getBytes());
-                    return;
 
 
                 }

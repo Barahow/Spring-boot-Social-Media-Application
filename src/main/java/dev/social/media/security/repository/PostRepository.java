@@ -26,7 +26,7 @@ public interface PostRepository extends MongoRepository< Post, ObjectId> {
 
     Optional<Post> findByUser(AppUser appUser);
 
-    Optional<Post> findByUserName(String userName);
+  //  Optional<Post> findByUserName(String userName);
 
     @Override
     void deleteById(ObjectId id);

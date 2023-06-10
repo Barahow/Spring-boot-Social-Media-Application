@@ -1,5 +1,8 @@
 package dev.social.media.security.model;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +21,9 @@ public class Comment {
 
     @Id
     private ObjectId id;
+
+    @NotBlank(message = "the content must not be blank")
+    @Size(max = 500,message = "the content must not exceed 500 characters")
     private String content;
 
     private LocalDateTime createdAt;

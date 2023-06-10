@@ -4,10 +4,7 @@ import dev.social.media.security.model.AppUser;
 import dev.social.media.security.model.Comment;
 import dev.social.media.security.model.Like;
 import dev.social.media.security.model.Post;
-import dev.social.media.security.service.JwtTokenProvider;
-import dev.social.media.security.service.LikeService;
-import dev.social.media.security.service.PostService;
-import dev.social.media.security.service.UserService;
+import dev.social.media.security.service.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -22,9 +19,7 @@ import java.util.Optional;
 @RestController
 @Slf4j
 @AllArgsConstructor
-
 @RequestMapping("/api/v1/like")
-
 public class LikeController {
 
 
@@ -32,6 +27,8 @@ public class LikeController {
     private LikeService likeService;
 
     private final PostService postService;
+
+    private final CommentService commentService;
 
     private final UserService userService;
 
@@ -74,6 +71,40 @@ public class LikeController {
 
 
 
+    @PostMapping("/comment/{id}")
+    public ResponseEntity<Like> likeComment(@PathVariable  ObjectId commentId, @RequestHeader("Authorization") String authorizationHeader) {
+        String loggedInUserEmail = jwtTokenProvider.getEmailFromToken(authorizationHeader);
+
+        Optional<Comment> commentOptional = commentService.getCommentById(commentId);
+
+
+        AppUser appUser = userService.getUser(loggedInUserEmail);
+
+        if (appUser== null) {
+            return ResponseEntity.notFound().build();
+        }
+
+
+        if (commentOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+
+        Comment comment = commentOptional.get();
+
+        if (!comment.getUser().getEmail().equals(loggedInUserEmail)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+
+        Like like = likeService.LikeComment(appUser.getEmail(),comment.getId());
+
+
+        return new ResponseEntity<>(like,HttpStatus.CREATED);
+
+    }
+
+
     @DeleteMapping("/like/{id}")
     public ResponseEntity<Like> removeLike(@PathVariable("id") ObjectId likeId, @RequestHeader("Authorization") String authorizationToken) {
         String loggedInUserEmail = jwtTokenProvider.getEmailFromToken(authorizationToken);
@@ -108,7 +139,7 @@ public class LikeController {
 
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/like/v1/{id}")
     public ResponseEntity<Like> getSinglePost(@PathVariable("id") ObjectId id) {
         Optional<Like> like = likeService.getLike(id);
         if (like.isEmpty()) {

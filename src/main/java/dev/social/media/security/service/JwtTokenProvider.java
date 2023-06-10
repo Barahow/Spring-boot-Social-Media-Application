@@ -47,7 +47,7 @@ public class JwtTokenProvider {
 
         String access_token = JWT.create().withSubject(user.getUsername())
                 .withClaim("roles",roles)
-                .withIssuer(request.getRequestURI().toString())
+                .withIssuer(request.getRequestURI())
                 .withExpiresAt(new Date(System.currentTimeMillis()+60*60*1000))
                 .sign(algorithm);
 
