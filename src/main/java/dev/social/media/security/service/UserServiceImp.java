@@ -1,9 +1,5 @@
 package dev.social.media.security.service;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import dev.social.media.security.config.PasswordEncoderConfig;
 import dev.social.media.security.model.AppUser;
 import dev.social.media.security.model.UserRole;
@@ -12,6 +8,7 @@ import dev.social.media.security.repository.UserRepository;
 import jakarta.validation.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -24,7 +21,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -188,6 +184,11 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
         user.getRoleList().add(userRole);
 
+    }
+
+    @Override
+    public Optional<AppUser> findById(ObjectId userId) {
+        return userRepository.findById(userId);
     }
 
 

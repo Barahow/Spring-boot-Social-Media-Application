@@ -8,6 +8,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.FluentQuery;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -20,6 +21,7 @@ private LocalDateTime createdAt;
 private LocalDateTime updatedAt;
 
 private AppUser user;*/
+@Repository
 public interface PostRepository extends MongoRepository< Post, ObjectId> {
     @Override
     Optional<Post> findById(ObjectId id);

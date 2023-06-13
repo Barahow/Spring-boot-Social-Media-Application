@@ -49,8 +49,14 @@ public class AppUser {
 
      private String profilePicture;
 
+
+
      @DBRef
      private List<UserRole> roleList;
+
+
+     @DBRef
+     private List<UserFollow> followings;
 
 
 /*
