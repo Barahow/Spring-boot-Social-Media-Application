@@ -1,9 +1,7 @@
 package dev.social.media.security.controller;
 
 import dev.social.media.security.dto.PostContent;
-import dev.social.media.security.model.AppUser;
-import dev.social.media.security.model.Follow;
-import dev.social.media.security.model.Post;
+import dev.social.media.security.model.*;
 import dev.social.media.security.service.FollowService;
 import dev.social.media.security.service.JwtTokenProvider;
 import dev.social.media.security.service.PostService;
@@ -18,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
+import java.util.List;
 
 @Slf4j
 @AllArgsConstructor
@@ -92,6 +92,46 @@ public class FollowController {
             return ResponseEntity.ok().build();
         }
 
+    @GetMapping("/followers/v1/{id}")
+    public ResponseEntity<List<AppUser>> getNumberOfFollowers(@PathVariable("id") ObjectId id) {
+        Optional<AppUser> appUserOptional = userService.findById(id);
+
+        if (appUserOptional.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        }
+
+        AppUser following = appUserOptional.get();
+
+
+
+
+        List<AppUser> followers = followService.getAllFollowers(following);
+
+        return ResponseEntity.ok(followers);
     }
+
+
+
+    @GetMapping("/following/v1/{id}")
+    public ResponseEntity<List<AppUser>> getNumberOfFollowing(@PathVariable("id") ObjectId id) {
+        Optional<AppUser> appUserOptional = userService.findById(id);
+
+        if (appUserOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        }
+
+        AppUser appUser = appUserOptional.get();
+
+
+
+
+        List<AppUser> followings =followService.findAllFollowings(appUser);
+
+        return ResponseEntity.ok(followings);
+    }
+}
+
 
 
