@@ -50,14 +50,16 @@ public class SecurityConfig {
         http.csrf().disable();
           http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests().requestMatchers("/api/v1/login/**", "/api/token/refresh/**").permitAll();
-        http.authorizeHttpRequests().requestMatchers(GET,"/api/v1/user/**").hasAuthority("USER");
+        http.authorizeHttpRequests().requestMatchers(GET,"/api/v1/user/**","api/v1/follow/**","/api/v1/like/**","/api/v1/comment/**").hasAuthority("USER");
+        http.authorizeHttpRequests().requestMatchers(POST,"/api/v1/user/**","/api/v1/follow/**", "/api/v1/like/**","/api/v1/comment/**").hasAuthority("USER");
+        http.authorizeHttpRequests().requestMatchers(POST,"/api/v1/user/**","/api/v1/follow/**", "/api/v1/like/**","/api/v1/comment/**").hasAuthority("MANAGER");
         http.authorizeHttpRequests().requestMatchers(POST, "api/v1/user/**").hasAuthority("ADMIN");
-        http.authorizeHttpRequests().requestMatchers(GET, "/api/v1/post/**",  "/api/v1/user/**").hasAnyAuthority("ADMIN");
-        http.authorizeHttpRequests().requestMatchers(DELETE, "/api/v1/user/**","/api/v1/post/**").hasAuthority("USER");
-        http.authorizeHttpRequests().requestMatchers(POST, "api/v1/post/**", "api/v1/user/**").hasAuthority("ADMIN");
-        http.authorizeHttpRequests().requestMatchers(PUT, "/api/v1/post/**","/api/v1/user/**").hasAuthority("USER");
-        http.authorizeHttpRequests().requestMatchers(PUT,  "/api/v1/post/**", "api/v1/user/**").hasAuthority("ADMIN");
-        http.authorizeHttpRequests().requestMatchers(DELETE, "/api/v1/post/**", "/api/v1/user/**").hasAuthority("SUPER_ADMIN");
+        http.authorizeHttpRequests().requestMatchers(GET, "/api/v1/post/**",  "/api/v1/user/**","/api/v1/comment/**", "/api/v1/follow/**").hasAnyAuthority("ADMIN");
+        http.authorizeHttpRequests().requestMatchers(DELETE, "/api/v1/user/**","/api/v1/post/**", "/api/v1/like/**","/api/v1/follow/**").hasAuthority("USER");
+        http.authorizeHttpRequests().requestMatchers(POST, "api/v1/post/**", "api/v1/user/**","/api/v1/comment/**").hasAuthority("ADMIN");
+        http.authorizeHttpRequests().requestMatchers(PUT, "/api/v1/post/**","/api/v1/user/**", "/api/v1/comment/**").hasAuthority("USER");
+        http.authorizeHttpRequests().requestMatchers(PUT,  "/api/v1/post/**", "api/v1/user/**","/api/v1/comment/**").hasAuthority("ADMIN");
+        http.authorizeHttpRequests().requestMatchers(DELETE, "/api/v1/post/**", "/api/v1/user/**","/api/v1/comment/**").hasAuthority("SUPER_ADMIN");
 
         http.authorizeHttpRequests().anyRequest().authenticated();
 

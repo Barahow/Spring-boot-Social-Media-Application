@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
+@RestController
 @Slf4j
 @AllArgsConstructor
 @RequestMapping("/api/v1/comment")

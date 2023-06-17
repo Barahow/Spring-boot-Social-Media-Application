@@ -71,10 +71,14 @@ public class JwtTokenProvider {
     }
     public String getEmailFromToken(String token) {
         String secretKey = System.getenv("MY_APP_SECRET_KEY");
+        log.info("secret key {}",secretKey);
         //Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
         Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
         JWTVerifier verify = JWT.require(algorithm).build();
-        DecodedJWT decodedJWT = verify.verify(token);
+
+        log.info(token);
+        String tokenWithoutBearer = token.replace("Bearer ", "");
+        DecodedJWT decodedJWT = verify.verify(tokenWithoutBearer);
 
 
 

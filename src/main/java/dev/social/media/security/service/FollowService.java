@@ -1,20 +1,12 @@
 package dev.social.media.security.service;
 
 import dev.social.media.security.model.*;
-import dev.social.media.security.repository.FollowRepository;
-import dev.social.media.security.repository.PostRepository;
-import dev.social.media.security.repository.UserFollowRepository;
-import dev.social.media.security.repository.UserRepository;
+import dev.social.media.security.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.hadoop.yarn.webapp.hamlet2.Hamlet;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.repository.query.ReactiveQueryByExampleExecutor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +34,8 @@ public class FollowService {
     @Autowired
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
+
+    private final FollowRequestRepository followRequestRepository;
 
     private final UserFollowRepository userFollowRepository;
 
@@ -215,4 +209,29 @@ public class FollowService {
     }
 
 
+    public FollowRequest acceptFollowRequest(AppUser sender, AppUser receiver) {
+
+        AppUser sender1 = userRepository.findByEmailIgnoreCase(sender.getEmail());
+        AppUser receiver1 = userRepository.findByEmailIgnoreCase(receiver.getEmail());
+
+        if (sender1 == null && receiver1== null) {
+            throw new NullPointerException("Both the sender and the reciever are null");
+        }
+
+        if (sender1 != null && receiver1!= null) {
+
+            LocalDateTime dateTime = LocalDateTime.now();
+
+            return followRequestRepository.insert(new FollowRequest(new ObjectId(), sender, receiver, dateTime));
+
+
+        }else {
+            throw new IllegalStateException("there might not be a follow request to check");
+        }
+    }
+
+    public Optional<FollowRequest> getFollowRequestById(ObjectId requestId) {
+
+        return followRequestRepository.findById(requestId);
+    }
 }

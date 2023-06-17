@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.List;
-
+@RestController
 @Slf4j
 @AllArgsConstructor
 @RequestMapping("/api/v1/follow")
@@ -38,15 +38,17 @@ public class FollowController {
 
 
     @PostMapping("/{id}")
-    public ResponseEntity<Follow> createFollow(@PathVariable("id")  ObjectId targetUserId, @RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<?> createFollow(@PathVariable("id")  ObjectId targetUserId, @RequestHeader("Authorization") String authorizationHeader) {
         String loggedInUserEmail = jwtTokenProvider.getEmailFromToken(authorizationHeader);
 
         AppUser appUser = userService.getUser(loggedInUserEmail);
         Optional<AppUser> targetUser = userService.findById(targetUserId);
 
+
         if (appUser == null && targetUser.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
 
         assert appUser != null;
         if (!appUser.getEmail().equals(loggedInUserEmail)) {
@@ -58,16 +60,67 @@ public class FollowController {
 
             AppUser targetFollow = targetUser.get();
 
-            Follow follow = followService.createFollow(appUser, targetFollow);
+            if (!targetFollow.isPrivate()) {
+                Follow follow = followService.createFollow(appUser, targetFollow);
+                userService.updateUser(appUser);
+                return new ResponseEntity<>(follow, HttpStatus.CREATED);
+            }else {
+                FollowRequest followRequest = followService.acceptFollowRequest(appUser,targetFollow);
+                if (followRequest!= null) {
+                    return new ResponseEntity<>(followRequest,HttpStatus.CREATED);
+
+                }else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                }
+            }
 
 
-            return new ResponseEntity<>(follow, HttpStatus.CREATED);
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @PostMapping("/accept/{requestId}")
+    public ResponseEntity<FollowRequest> acceptFollowRequest(@PathVariable("requestId") ObjectId requestId, @RequestHeader("Authorization") String authorizationHeader) {
+        Optional<FollowRequest> followRequestOptional = followService.getFollowRequestById(requestId);
+        String loggedInUserEmail = jwtTokenProvider.getEmailFromToken(authorizationHeader);
+
+        AppUser appUser = userService.getUser(loggedInUserEmail);
+
+
+
+        if (followRequestOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
 
+        if (!appUser.getEmail().equals(loggedInUserEmail)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+
+
+        FollowRequest followRequest = followRequestOptional.get();
+
+        if (appUser.isPrivate()) {
+
+            // Process the acceptance of the follow request
+            FollowRequest follow = followService.acceptFollowRequest(followRequest.getSender(),followRequest.getReceiver());
+
+            if (follow != null) {
+                return new ResponseEntity<>(follow, HttpStatus.CREATED);
+
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        }
+
+       return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-        @DeleteMapping("/follow/{id}")
+
+
+
+
+
+    @DeleteMapping("/follow/{id}")
         public ResponseEntity<Follow> deleteFollow (@PathVariable("id") ObjectId
         targetUserId, @RequestHeader("Authorization") String authorizationToken){
             String loggedInUserEmail = jwtTokenProvider.getEmailFromToken(authorizationToken);
@@ -92,7 +145,7 @@ public class FollowController {
             return ResponseEntity.ok().build();
         }
 
-    @GetMapping("/followers/v1/{id}")
+    @GetMapping("/followers/{id}")
     public ResponseEntity<List<AppUser>> getNumberOfFollowers(@PathVariable("id") ObjectId id) {
         Optional<AppUser> appUserOptional = userService.findById(id);
 
@@ -113,7 +166,7 @@ public class FollowController {
 
 
 
-    @GetMapping("/following/v1/{id}")
+    @GetMapping("/following/{id}")
     public ResponseEntity<List<AppUser>> getNumberOfFollowing(@PathVariable("id") ObjectId id) {
         Optional<AppUser> appUserOptional = userService.findById(id);
 
