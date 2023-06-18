@@ -26,7 +26,6 @@
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-mongodb:4.0.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:6.0.7" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context:6.0.7" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-beans:6.0.7" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:6.0.7" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-commons:3.0.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-web:2.7.5" level="project" />
@@ -183,6 +182,10 @@
     <orderEntry type="library" name="Maven: io.projectreactor:reactor-core:3.5.4" level="project" />
     <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.4" level="project" />
     <orderEntry type="library" name="Maven: com.auth0:java-jwt:4.4.0" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-websocket:3.0.5" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-websocket:6.0.7" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-messaging:6.0.10" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-beans:6.0.7" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-starter-test:3.0.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test:3.0.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test-autoconfigure:3.0.5" level="project" />
