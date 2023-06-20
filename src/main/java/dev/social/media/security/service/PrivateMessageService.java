@@ -1,10 +1,9 @@
 package dev.social.media.security.service;
 
-import dev.social.media.security.model.AppUser;
-import dev.social.media.security.model.Post;
-import dev.social.media.security.model.PrivateMessage;
+import dev.social.media.security.model.*;
 import dev.social.media.security.repository.PostRepository;
 import dev.social.media.security.repository.PrivateMessageRepository;
+import dev.social.media.security.repository.PrivateMessageRequestRepository;
 import dev.social.media.security.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,13 +26,11 @@ public class PrivateMessageService {
 
         @Autowired
         private final PrivateMessageRepository privateMessageRepository;
+
+        private final PrivateMessageRequestRepository privateMessageRequestRepository;
         private final PostRepository postRepository;
         private final UserRepository userRepository;
-
-    private final SimpMessagingTemplate messagingTemplate;
-
-        @Autowired
-        private MongoTemplate mongoTemplate;
+        private final SimpMessagingTemplate messagingTemplate;
 
 
 
@@ -60,29 +57,67 @@ public class PrivateMessageService {
         }
 
 
-        public Optional<Post> getPostById(ObjectId postId) {
-            return postRepository.findById(postId);
 
+
+        public void deleteMessageRequest(PrivateMessageRequest privateMessageRequest) {
+            privateMessageRequestRepository.delete(privateMessageRequest);
         }
 
 
-        public void deletePost(Post post) {
-            postRepository.delete(post);
-        }
+    public void deleteMessage(PrivateMessage privateMessage) {
+        privateMessageRepository.delete(privateMessage);
+    }
 
-        // get post by a specific user
+    public Optional<PrivateMessage> getPrivateMessageId(ObjectId privateMessage) {
+        return privateMessageRepository.findById(privateMessage);
 
-        public Optional<Post >getPostFromUser(AppUser user) {
-            return postRepository.findByUser(user);
-        }
+    }
+
+    public Optional<PrivateMessageRequest> getPrivateMessageRequestId(ObjectId privateMessageRequest) {
+        return privateMessageRequestRepository.findById(privateMessageRequest);
+
+    }
 
 
 
-        public Post updatePost(Post existingPost) {
-            return postRepository.save(existingPost);
-        }
 
     public void savePrivateMessage(PrivateMessage privateMessage) {
     privateMessageRepository.save(privateMessage);
     }
+
+    public void savePrivateMessageRequest(PrivateMessageRequest privateMessageRequest) {
+        privateMessageRequestRepository.save(privateMessageRequest);
+    }
+
+
+
+
+
+    public PrivateMessageRequest acceptFollowRequest(AppUser sender, AppUser receiver, String messageContent) {
+
+        AppUser sender1 = userRepository.findByEmailIgnoreCase(sender.getEmail());
+        AppUser receiver1 = userRepository.findByEmailIgnoreCase(receiver.getEmail());
+
+        if (sender1 == null && receiver1== null) {
+            throw new NullPointerException("Both the sender and the reciever are null");
+        }
+
+        if (sender1 != null && receiver1!= null) {
+
+            LocalDateTime dateTime = LocalDateTime.now();
+
+            PrivateMessageRequest privateMessageRequest = new PrivateMessageRequest(new ObjectId(),messageContent,sender1,receiver1,dateTime);
+
+            messagingTemplate.convertAndSend("/topic/messages",privateMessageRequest);;
+            privateMessageRequestRepository.insert(privateMessageRequest);
+
+            return privateMessageRequest;
+
+        }else {
+            throw new IllegalStateException("there might not be a follow request to check");
+        }
+    }
+
 }
+
+

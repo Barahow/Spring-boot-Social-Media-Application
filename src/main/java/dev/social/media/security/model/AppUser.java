@@ -49,6 +49,8 @@ public class AppUser {
 
      private String profilePicture;
 
+     private String bio;
+
 
 
      @DBRef
