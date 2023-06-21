@@ -19,15 +19,19 @@
     <name>Social-media-application</name>
     <description>A simple api related to social media</description>
     <properties>
-        <java.version>17</java.version>
+        <java.version>20</java.version>
     </properties>
 
 
     <dependencies>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -210,6 +214,7 @@
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
+
                     <configuration>
                         <!-- Configuration for Spring Boot Maven Plugin -->
                         <excludes>
