@@ -89,7 +89,8 @@ public class PrivateMessageController {
             }
 
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();    }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
 
 
     @DeleteMapping("/message/{id}")

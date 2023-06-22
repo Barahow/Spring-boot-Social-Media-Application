@@ -19,7 +19,7 @@
     <name>Social-media-application</name>
     <description>A simple api related to social media</description>
     <properties>
-        <java.version>20</java.version>
+        <java.version>17</java.version>
     </properties>
 
 
