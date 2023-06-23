@@ -3,6 +3,7 @@ package dev.social.media.security.controller;
 import dev.social.media.security.dto.PostContent;
 import dev.social.media.security.model.AppUser;
 import dev.social.media.security.model.Post;
+import dev.social.media.security.service.FollowService;
 import dev.social.media.security.service.JwtTokenProvider;
 import dev.social.media.security.service.PostService;
 import dev.social.media.security.service.UserService;
@@ -34,6 +35,8 @@ public class PostController {
     private final PostService postService;
 
     private final UserService userService;
+
+    private final FollowService followService;
 
     private final JwtTokenProvider jwtTokenProvider;
 

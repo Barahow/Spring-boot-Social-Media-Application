@@ -2,6 +2,7 @@ package dev.social.media.security.service;
 
 import dev.social.media.security.model.*;
 import dev.social.media.security.repository.*;
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -34,8 +35,11 @@ public class FollowService {
     @Autowired
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
     private final FollowRequestRepository followRequestRepository;
+
+    private final CommentRepository commentRepository;
 
     private final UserFollowRepository userFollowRepository;
 
@@ -95,6 +99,7 @@ public class FollowService {
     // this method handles getting all followers
     // for a specific user
     public List<AppUser> getAllFollowers(AppUser user) {
+
         Optional<List<UserFollow>> appFollow = userFollowRepository.findByFollower(user);
 
         if (appFollow.isEmpty()) {

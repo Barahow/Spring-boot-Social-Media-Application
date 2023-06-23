@@ -59,7 +59,8 @@ public class NotificationsController {
             AppUser targetUser = targetUserOptional.get();
 
             //  //TODO  handles different types of notifications such as new post from user you follow, like, comment etc
-            if (followService.isFollowed(appUser,targetUser)) {
+            if (followService.isFollowed(appUser,targetUser) && notificationType.equals("post")) {
+                // new post
                 Notifications notifications = notificationService.createNotifications(appUser.getEmail(), targetUser.getEmail(), content);
 
                 // send the private message to target user
@@ -74,7 +75,62 @@ public class NotificationsController {
                 return new ResponseEntity<>(notifications, HttpStatus.CREATED);
 
 
-            } else if (notificationType.equals("follow request")) {
+            }
+            if (followService.isFollowed(appUser,targetUser) && notificationType.equals("like")) {
+                // new post
+                Notifications notifications = notificationService.createNotifications(appUser.getEmail(), targetUser.getEmail(), content);
+
+                // send the private message to target user
+
+                notifications.setRead(true);
+                messagingTemplate.convertAndSendToUser(targetUser.getEmail(), "/topic/notifications", notifications);
+
+                // save the private message in the database
+                userService.updateUser(appUser);
+
+
+                return new ResponseEntity<>(notifications, HttpStatus.CREATED);
+
+
+            }
+            if (followService.isFollowed(appUser,targetUser) && notificationType.equals("message")) {
+                // new post
+                Notifications notifications = notificationService.createNotifications(appUser.getEmail(), targetUser.getEmail(), content);
+
+                // send the private message to target user
+
+                notifications.setRead(true);
+                messagingTemplate.convertAndSendToUser(targetUser.getEmail(), "/topic/notifications", notifications);
+
+                // save the private message in the database
+                userService.updateUser(appUser);
+
+
+                return new ResponseEntity<>(notifications, HttpStatus.CREATED);
+
+
+            }
+
+            if (followService.isFollowed(appUser,targetUser) && notificationType.equals("comment")) {
+                // new comment
+                Notifications notifications = notificationService.createNotifications(appUser.getEmail(), targetUser.getEmail(), content);
+
+                // send the private message to target user
+
+                notifications.setRead(true);
+                messagingTemplate.convertAndSendToUser(targetUser.getEmail(), "/topic/notifications", notifications);
+
+                // save the private message in the database
+                userService.updateUser(appUser);
+
+
+                return new ResponseEntity<>(notifications, HttpStatus.CREATED);
+
+
+            }
+
+
+            else if (notificationType.equals("follow request")) {
                 Notifications notifications = notificationService.createNotifications(appUser.getEmail(), targetUser.getEmail(), "follow request from "+appUser.getEmail());
 
                 // send the private message to target user

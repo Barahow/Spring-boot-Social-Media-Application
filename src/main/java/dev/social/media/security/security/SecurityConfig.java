@@ -20,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import static org.springframework.http.HttpMethod.*;
 
@@ -53,8 +54,8 @@ public class SecurityConfig {
 
         // User paths
         http.authorizeHttpRequests().requestMatchers("/api/v1/login/**", "/api/token/refresh/**").permitAll();
-        http.authorizeHttpRequests().requestMatchers(GET, "/api/v1/user/**", "api/v1/follow/**", "/api/v1/like/**", "/api/v1/comment/**", "/api/v1/profile/**").hasAuthority("USER");
-        http.authorizeHttpRequests().requestMatchers(POST, "/api/v1/user/**", "/api/v1/follow/**", "/api/v1/like/**", "/api/v1/comment/**", "/api/v1/message/**", "/api/v1/profile/**").hasAuthority("USER");
+        http.authorizeHttpRequests().requestMatchers(GET, "/api/v1/timeline/**","/api/v1/user/**", "api/v1/follow/**", "/api/v1/like/**", "/api/v1/comment/**", "/api/v1/profile/**").hasAuthority("USER");
+        http.authorizeHttpRequests().requestMatchers(POST, "/api/v1/timeline/**","/api/v1/user/**", "/api/v1/follow/**", "/api/v1/like/**", "/api/v1/comment/**", "/api/v1/message/**", "/api/v1/profile/**").hasAuthority("USER");
         http.authorizeHttpRequests().requestMatchers(PUT, "/api/v1/post/**", "/api/v1/user/**", "/api/v1/comment/**", "/api/v1/profile/**").hasAuthority("USER");
         http.authorizeHttpRequests().requestMatchers(DELETE, "/api/v1/user/**", "/api/v1/post/**", "/api/v1/like/**", "/api/v1/follow/**", "/api/v1/profile/**").hasAuthority("USER");
 

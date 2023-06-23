@@ -2,7 +2,9 @@ package dev.social.media.security.service;
 
 import dev.social.media.security.model.AppUser;
 import dev.social.media.security.model.Post;
+import dev.social.media.security.repository.FollowRepository;
 import dev.social.media.security.repository.PostRepository;
+import dev.social.media.security.repository.UserFollowRepository;
 import dev.social.media.security.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,8 @@ public class PostService {
     @Autowired
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+
+    private final FollowRepository followRepository;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -49,6 +53,33 @@ public class PostService {
 
 
     }
+
+    public Post sharePost(Post post, AppUser appUser) {
+
+        AppUser user = userRepository.findByEmailIgnoreCase(appUser.getEmail());
+
+
+
+
+        if (user == null) {
+            throw  new UsernameNotFoundException("User not found with that email");
+
+        }
+        LocalDateTime dateTime = LocalDateTime.now();
+
+
+        Post sharedPost = new Post();
+
+        sharedPost.setContent(post.getContent());
+        sharedPost.setCreatedAt(dateTime);
+        sharedPost.setUser(user);
+
+        return postRepository.save(sharedPost);
+
+
+
+    }
+
 
 
     public Optional<Post> getPostById(ObjectId postId) {
