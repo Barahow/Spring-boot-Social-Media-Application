@@ -17,6 +17,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -33,11 +34,14 @@ public class CommentController {
     private final CommentService commentService;
 
 
+
     private final PostService postService;
 
     private final UserService userService;
 
     private final JwtTokenProvider jwtTokenProvider;
+
+    private SimpMessagingTemplate messagingTemplate;
 
 
 
@@ -69,6 +73,7 @@ public class CommentController {
         String content= commentContent.getContent();
 
         Comment comment = commentService.createComment(post.getId(),content,appUser.getEmail());
+        messagingTemplate.convertAndSend("/topic/comment", comment);
 
 
         return new ResponseEntity<>(comment,HttpStatus.CREATED);

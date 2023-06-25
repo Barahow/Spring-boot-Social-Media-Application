@@ -239,4 +239,31 @@ public class FollowService {
 
         return followRequestRepository.findById(requestId);
     }
+
+
+
+
+
+    // In your CommentService or CommentRepository
+
+    // creates a feed where we return all the comments a user posts as long as the user follows that person
+    public List<Comment> getAllCommentsFromFollowing(AppUser appUser) {
+        List<AppUser> followingUsers= findAllFollowings(appUser);
+        if (followingUsers== null) {
+            throw new NullPointerException("you do not as f this moment have followers");
+        }
+
+        return commentRepository.findByUserIn(followingUsers);
+    }
+
+    public List<Post> getAllPostsFromFollowing(AppUser appUser) {
+        List<AppUser> followingUsers= findAllFollowings(appUser);
+        if (followingUsers== null) {
+            throw new NullPointerException("you do not as f this moment have followers");
+        }
+
+        return postRepository.findByUserIn(followingUsers);
+    }
+
+
 }

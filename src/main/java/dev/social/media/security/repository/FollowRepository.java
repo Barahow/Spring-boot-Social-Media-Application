@@ -15,4 +15,5 @@ import java.util.List;
 public interface FollowRepository  extends MongoRepository<Follow, ObjectId> {
     Optional<Follow> findById(ObjectId id);
     Optional<List<Follow>> findByFollower(AppUser user);
+
 }

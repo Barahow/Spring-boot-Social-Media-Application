@@ -13,6 +13,8 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -35,7 +37,7 @@ public class FollowController {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-
+    private SimpMessagingTemplate messagingTemplate;
 
     @PostMapping("/{id}")
     public ResponseEntity<?> createFollow(@PathVariable("id")  ObjectId targetUserId, @RequestHeader("Authorization") String authorizationHeader) {
@@ -73,6 +75,7 @@ public class FollowController {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
             }
+
 
 
         }
@@ -184,7 +187,60 @@ public class FollowController {
 
         return ResponseEntity.ok(followings);
     }
+
+
+
+
+    @GetMapping("/following/comments/{id}")
+    public ResponseEntity<List<Comment>> getAllCommentsFromFollowing(@PathVariable("id") ObjectId id, @RequestHeader("Authorization") String authorizationHeader) {
+        Optional<AppUser> appUserOptional = userService.findById(id);
+        String loggedInUserEmail = jwtTokenProvider.getEmailFromToken(authorizationHeader);
+
+        if (appUserOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        }
+
+        AppUser appUser = appUserOptional.get();
+
+        if (!appUser.getEmail().equals(loggedInUserEmail)) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        }
+
+        List<Comment> followingsComment =followService.getAllCommentsFromFollowing(appUser);
+
+        return ResponseEntity.ok(followingsComment);
+    }
+
+
+
+    @GetMapping("/following/posts/{id}")
+    public ResponseEntity<List<Post>> getAllPostFromFollowing(@PathVariable("id") ObjectId id, @RequestHeader("Authorization") String authorizationHeader) {
+        Optional<AppUser> appUserOptional = userService.findById(id);
+        String loggedInUserEmail = jwtTokenProvider.getEmailFromToken(authorizationHeader);
+
+        if (appUserOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        }
+
+        AppUser appUser = appUserOptional.get();
+
+        if (!appUser.getEmail().equals(loggedInUserEmail)) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        }
+
+        List<Post> followingsPost =followService.getAllPostsFromFollowing(appUser);
+
+        return ResponseEntity.ok(followingsPost);
+    }
 }
+
+
 
 
 

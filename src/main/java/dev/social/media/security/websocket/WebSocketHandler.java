@@ -27,6 +27,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
             handlePrivateMessage(payload);
         } else if ("/topic/notifications".equals(destination)) {
             handleNotification(payload);
+        }else if ("/topic/post".equals(destination)) {
+            handleNewPostFromUser(payload);
+        }else if ("/topic/comment".equals(destination)) {
+            handleNewCommentFromUser(payload);
         } else {
             // Handle other types of messages
         }
@@ -43,5 +47,16 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         messagingTemplate.convertAndSend("/topic/notifications",message);
     }
+
+    private void handleNewPostFromUser(String message) {
+
+        messagingTemplate.convertAndSend("/topic/post",message);
+    }
+
+    private void handleNewCommentFromUser(String message) {
+
+        messagingTemplate.convertAndSend("/topic/comment",message);
+    }
 }
+
 

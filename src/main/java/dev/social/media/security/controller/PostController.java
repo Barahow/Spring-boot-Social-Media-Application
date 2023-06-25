@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -39,6 +40,7 @@ public class PostController {
     private final FollowService followService;
 
     private final JwtTokenProvider jwtTokenProvider;
+    private SimpMessagingTemplate messagingTemplate;
 
 
 
@@ -60,6 +62,9 @@ public class PostController {
         String content = postContent.getContent();
 
         Post post = postService.createPost(appUser.getEmail(),content);
+
+
+        messagingTemplate.convertAndSend("/topic/post",post);
 
 
         return new ResponseEntity<>(post,HttpStatus.CREATED);
