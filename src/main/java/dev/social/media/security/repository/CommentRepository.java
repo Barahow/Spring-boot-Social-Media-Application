@@ -17,4 +17,9 @@ public interface CommentRepository extends MongoRepository<Comment, ObjectId> {
 
 
     List<Comment> findByUserIn(List<AppUser> followingUsers);
+
+
+    List<Comment> findByContentContainingIgnoreCase(String keyword);
+
+    List<Comment> findByUserUsernameAndContent(String userName, String content);
 }

@@ -35,4 +35,8 @@ public interface PostRepository extends MongoRepository< Post, ObjectId> {
     void deleteById(ObjectId id);
 
     List<Post> findByUserIn(List<AppUser> followingUsers);
+
+    List<Post> findByContentContainingIgnoreCase(String keyword);
+
+    List<Post> findByUserUserNameAndContent(String userName, String content);
 }
