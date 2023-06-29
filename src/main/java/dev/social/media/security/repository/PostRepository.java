@@ -39,4 +39,6 @@ public interface PostRepository extends MongoRepository< Post, ObjectId> {
     List<Post> findByContentContainingIgnoreCase(String keyword);
 
     List<Post> findByUserUserNameAndContent(String userName, String content);
+
+    List<Post> findByHashTagContainingIgnoreCase(List<String> hashtag);
 }

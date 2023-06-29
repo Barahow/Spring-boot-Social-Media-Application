@@ -71,6 +71,15 @@ public class SearchService {
     }
 
 
+    public List<Post> searchPostByHashTag(List<String> hashtag) {
+        if (hashtag == null || hashtag.isEmpty()) {
+            throw new IllegalArgumentException("hashtag cannot be null or empty");
+        }
+
+        log.info("Searching for post with hashtag: {}", hashtag);
+        return postRepository.findByHashTagContainingIgnoreCase(hashtag);
+    }
+
     public List<Post> getPostByUserAndContent(String userName, String content) {
         if (userName == null || userName.isEmpty() || content == null || content.isEmpty()) {
             throw new IllegalArgumentException("Username and content cannot be null or empty");

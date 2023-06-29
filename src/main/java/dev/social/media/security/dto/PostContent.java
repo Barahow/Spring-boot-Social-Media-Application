@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,6 +18,8 @@ public class PostContent {
     @NotBlank(message = "The title must not be blank")
     @Size(max = 100, message = "The title must not exceed 100 characters")
     private String title;
+
+    private List<String> hashTag;
 
     public String getContent() {
         return content;

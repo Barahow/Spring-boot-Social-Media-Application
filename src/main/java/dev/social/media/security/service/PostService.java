@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +50,7 @@ public class PostService {
 
 
 
-        return postRepository.insert(new Post(new ObjectId(),postContent,dateTime,null,user));
+        return postRepository.insert(new Post(new ObjectId(),postContent,dateTime,null,new ArrayList<>(),user));
 
 
 

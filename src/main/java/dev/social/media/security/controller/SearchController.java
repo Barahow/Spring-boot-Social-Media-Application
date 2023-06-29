@@ -26,14 +26,10 @@ public class SearchController {
 
     private final SearchService searchService;
 
-    private final UserService userService;
-
-    private final JwtTokenProvider jwtTokenProvider;
-
 
     @GetMapping("/user/{username}")
-    public ResponseEntity<List<AppUser>> searchUsername(@PathVariable("username")  String userName, @RequestHeader("Authorization") String authorizationHeader ) {
-        String loggedInUser = jwtTokenProvider.getEmailFromToken(authorizationHeader);
+    public ResponseEntity<List<AppUser>> searchUsername(@PathVariable("username")  String userName ) {
+
         List<AppUser> appUser = searchService.getUsersByUserName(userName);
 
 
@@ -51,7 +47,7 @@ public class SearchController {
 
 
             return new ResponseEntity<>(appUser,HttpStatus.CREATED);
-        
+
     }
 
 
